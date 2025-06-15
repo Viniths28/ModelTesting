@@ -1,0 +1,2310 @@
+﻿[
+  {
+    "p": {
+      "start": {
+        "identity": 0,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Me only",
+          "questionId": "Q_AD_Number_of_Applicants",
+          "stage": "Magic 10",
+          "heading": "Get Quote",
+          "dataType": "Enum (Single)",
+          "sectionOrder": 8,
+          "prompt": "Are you applying by yourself or with another applicant?",
+          "fieldId": "F_AD_Number_of_Applicants",
+          "order": 200
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:0"
+      },
+      "end": {
+        "identity": 1,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Husband, Wife, Father",
+          "questionId": "Q_AD_Relationship_With_SecondApplicant",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "String",
+          "sectionOrder": 9,
+          "prompt": "What is your relationship with the 2nd applicant?",
+          "fieldId": "F_AD_Relationship_With_SecondApplicant",
+          "order": 720
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 0,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Me only",
+              "questionId": "Q_AD_Number_of_Applicants",
+              "stage": "Magic 10",
+              "heading": "Get Quote",
+              "dataType": "Enum (Single)",
+              "sectionOrder": 8,
+              "prompt": "Are you applying by yourself or with another applicant?",
+              "fieldId": "F_AD_Number_of_Applicants",
+              "order": 200
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:0"
+          },
+          "relationship": {
+            "identity": 1152921504606846976,
+            "start": 0,
+            "end": 1,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "Q_AD_Number_of_Applicants=Yes",
+              "order": 720
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606846976",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:0",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1"
+          },
+          "end": {
+            "identity": 1,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Husband, Wife, Father",
+              "questionId": "Q_AD_Relationship_With_SecondApplicant",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "String",
+              "sectionOrder": 9,
+              "prompt": "What is your relationship with the 2nd applicant?",
+              "fieldId": "F_AD_Relationship_With_SecondApplicant",
+              "order": 720
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 2,
+        "labels": [
+          "Section"
+        ],
+        "properties": {
+          "name": "Living Situation ",
+          "sectionId": "Living Situation "
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:2"
+      },
+      "end": {
+        "identity": 3,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "",
+          "questionId": "Q_AD_AddressCheck",
+          "stage": "",
+          "heading": "Application",
+          "dataType": "",
+          "sectionOrder": 0,
+          "prompt": "Is this Your current Address?",
+          "fieldId": "F_AD_AddressCheck",
+          "order": 721
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:3"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 2,
+            "labels": [
+              "Section"
+            ],
+            "properties": {
+              "name": "Living Situation ",
+              "sectionId": "Living Situation "
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:2"
+          },
+          "relationship": {
+            "identity": 1152921504606846978,
+            "start": 2,
+            "end": 3,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "EXISTS { MATCH (a:Applicant {applicantId: $applicantId})-[:ANSWERED]->(:Datapoint)-[:ANSWERS]->(:Question {questionId: \"Q_AD_Residential_Address_(CustomerCurrent)\"}) }",
+              "order": 721
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606846978",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:2",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:3"
+          },
+          "end": {
+            "identity": 3,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "",
+              "questionId": "Q_AD_AddressCheck",
+              "stage": "",
+              "heading": "Application",
+              "dataType": "",
+              "sectionOrder": 0,
+              "prompt": "Is this Your current Address?",
+              "fieldId": "F_AD_AddressCheck",
+              "order": 721
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:3"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 3,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "",
+          "questionId": "Q_AD_AddressCheck",
+          "stage": "",
+          "heading": "Application",
+          "dataType": "",
+          "sectionOrder": 0,
+          "prompt": "Is this Your current Address?",
+          "fieldId": "F_AD_AddressCheck",
+          "order": 721
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:3"
+      },
+      "end": {
+        "identity": 4,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Owned Outright",
+          "questionId": "Q_AD_Residential_Status_(Customer)",
+          "stage": "M10",
+          "heading": "Application",
+          "dataType": "Enum (Single)",
+          "sectionOrder": 1,
+          "prompt": "What [is/was] [your/their] [current/prior] residential status?",
+          "fieldId": "F_AD_Residential_Status_(Customer)",
+          "order": 730
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:4"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 3,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "",
+              "questionId": "Q_AD_AddressCheck",
+              "stage": "",
+              "heading": "Application",
+              "dataType": "",
+              "sectionOrder": 0,
+              "prompt": "Is this Your current Address?",
+              "fieldId": "F_AD_AddressCheck",
+              "order": 721
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:3"
+          },
+          "relationship": {
+            "identity": 1152921504606846979,
+            "start": 3,
+            "end": 4,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "EXISTS { MATCH (a:Applicant {applicantId: $applicantId})-[:ANSWERED]->(:Datapoint)-[:ANSWERS]->(:Question {questionId: \"Q_AD_Residential_Address_(CustomerCurrent)\"}) }",
+              "order": 730
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606846979",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:3",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:4"
+          },
+          "end": {
+            "identity": 4,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Owned Outright",
+              "questionId": "Q_AD_Residential_Status_(Customer)",
+              "stage": "M10",
+              "heading": "Application",
+              "dataType": "Enum (Single)",
+              "sectionOrder": 1,
+              "prompt": "What [is/was] [your/their] [current/prior] residential status?",
+              "fieldId": "F_AD_Residential_Status_(Customer)",
+              "order": 730
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:4"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 4,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Owned Outright",
+          "questionId": "Q_AD_Residential_Status_(Customer)",
+          "stage": "M10",
+          "heading": "Application",
+          "dataType": "Enum (Single)",
+          "sectionOrder": 1,
+          "prompt": "What [is/was] [your/their] [current/prior] residential status?",
+          "fieldId": "F_AD_Residential_Status_(Customer)",
+          "order": 730
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:4"
+      },
+      "end": {
+        "identity": 5,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "164 Booran Road, Glen Huntly, VIC 3163",
+          "questionId": "Q_AD_Residential_Address_(CustomerCurrent)",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "String",
+          "sectionOrder": 2,
+          "prompt": "What [is/was] [your/their] current residential address?",
+          "fieldId": "F_AD_Residential_Address_(Customer-Current)",
+          "order": 740
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:5"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 4,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Owned Outright",
+              "questionId": "Q_AD_Residential_Status_(Customer)",
+              "stage": "M10",
+              "heading": "Application",
+              "dataType": "Enum (Single)",
+              "sectionOrder": 1,
+              "prompt": "What [is/was] [your/their] [current/prior] residential status?",
+              "fieldId": "F_AD_Residential_Status_(Customer)",
+              "order": 730
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:4"
+          },
+          "relationship": {
+            "identity": 1152921504606846980,
+            "start": 4,
+            "end": 5,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "EXISTS { MATCH (a:Applicant {applicantId: $applicantId})-[:ANSWERED]->(:Datapoint {fieldId:\"F_AD_AddressCheck\", typedValue:\"No\"}) }",
+              "order": 740
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606846980",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:4",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:5"
+          },
+          "end": {
+            "identity": 5,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "164 Booran Road, Glen Huntly, VIC 3163",
+              "questionId": "Q_AD_Residential_Address_(CustomerCurrent)",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "String",
+              "sectionOrder": 2,
+              "prompt": "What [is/was] [your/their] current residential address?",
+              "fieldId": "F_AD_Residential_Address_(Customer-Current)",
+              "order": 740
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:5"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 5,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "164 Booran Road, Glen Huntly, VIC 3163",
+          "questionId": "Q_AD_Residential_Address_(CustomerCurrent)",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "String",
+          "sectionOrder": 2,
+          "prompt": "What [is/was] [your/their] current residential address?",
+          "fieldId": "F_AD_Residential_Address_(Customer-Current)",
+          "order": 740
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:5"
+      },
+      "end": {
+        "identity": 6,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "",
+          "questionId": "Q_AD_Overseas_Address",
+          "stage": "App",
+          "heading": "Application",
+          "dataType": "String",
+          "sectionOrder": 3,
+          "prompt": "Does applicant live overseas?",
+          "fieldId": "F_AD_Overseas_Address",
+          "order": 750
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:6"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 5,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "164 Booran Road, Glen Huntly, VIC 3163",
+              "questionId": "Q_AD_Residential_Address_(CustomerCurrent)",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "String",
+              "sectionOrder": 2,
+              "prompt": "What [is/was] [your/their] current residential address?",
+              "fieldId": "F_AD_Residential_Address_(Customer-Current)",
+              "order": 740
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:5"
+          },
+          "relationship": {
+            "identity": 1152921504606846981,
+            "start": 5,
+            "end": 6,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "Q_AD_Residential_Status_(Customer) = Oveseas",
+              "order": 750
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606846981",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:5",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:6"
+          },
+          "end": {
+            "identity": 6,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "",
+              "questionId": "Q_AD_Overseas_Address",
+              "stage": "App",
+              "heading": "Application",
+              "dataType": "String",
+              "sectionOrder": 3,
+              "prompt": "Does applicant live overseas?",
+              "fieldId": "F_AD_Overseas_Address",
+              "order": 750
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:6"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 6,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "",
+          "questionId": "Q_AD_Overseas_Address",
+          "stage": "App",
+          "heading": "Application",
+          "dataType": "String",
+          "sectionOrder": 3,
+          "prompt": "Does applicant live overseas?",
+          "fieldId": "F_AD_Overseas_Address",
+          "order": 750
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:6"
+      },
+      "end": {
+        "identity": 7,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "5 years, 2 months",
+          "questionId": "Q_AD_Residential_Start_Date_(Customer)",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "Date",
+          "sectionOrder": 4,
+          "prompt": "How long [have/did] [you/they] [lived/live] here (in years and months)?",
+          "fieldId": "F_AD_Residential_Start_Date_(Customer)",
+          "order": 760
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:7"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 6,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "",
+              "questionId": "Q_AD_Overseas_Address",
+              "stage": "App",
+              "heading": "Application",
+              "dataType": "String",
+              "sectionOrder": 3,
+              "prompt": "Does applicant live overseas?",
+              "fieldId": "F_AD_Overseas_Address",
+              "order": 750
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:6"
+          },
+          "relationship": {
+            "identity": 1152921504606846982,
+            "start": 6,
+            "end": 7,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "-",
+              "order": 760
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606846982",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:6",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:7"
+          },
+          "end": {
+            "identity": 7,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "5 years, 2 months",
+              "questionId": "Q_AD_Residential_Start_Date_(Customer)",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "Date",
+              "sectionOrder": 4,
+              "prompt": "How long [have/did] [you/they] [lived/live] here (in years and months)?",
+              "fieldId": "F_AD_Residential_Start_Date_(Customer)",
+              "order": 760
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:7"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 7,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "5 years, 2 months",
+          "questionId": "Q_AD_Residential_Start_Date_(Customer)",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "Date",
+          "sectionOrder": 4,
+          "prompt": "How long [have/did] [you/they] [lived/live] here (in years and months)?",
+          "fieldId": "F_AD_Residential_Start_Date_(Customer)",
+          "order": 760
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:7"
+      },
+      "end": {
+        "identity": 8,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "164 Booran Road, Glen Huntly, VIC 3163",
+          "questionId": "Q_AD_Residential_Address_(CustomerPrior)",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "String",
+          "sectionOrder": 5,
+          "prompt": "What [is/was] [your/their] prior residential address?",
+          "fieldId": "F_AD_Residential_Address_(Customer-Prior)",
+          "order": 770
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:8"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 7,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "5 years, 2 months",
+              "questionId": "Q_AD_Residential_Start_Date_(Customer)",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "Date",
+              "sectionOrder": 4,
+              "prompt": "How long [have/did] [you/they] [lived/live] here (in years and months)?",
+              "fieldId": "F_AD_Residential_Start_Date_(Customer)",
+              "order": 760
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:7"
+          },
+          "relationship": {
+            "identity": 1152921504606846983,
+            "start": 7,
+            "end": 8,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "Q_AD_Residential_Start_Date_(Customer) < 24 months",
+              "order": 770
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606846983",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:7",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:8"
+          },
+          "end": {
+            "identity": 8,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "164 Booran Road, Glen Huntly, VIC 3163",
+              "questionId": "Q_AD_Residential_Address_(CustomerPrior)",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "String",
+              "sectionOrder": 5,
+              "prompt": "What [is/was] [your/their] prior residential address?",
+              "fieldId": "F_AD_Residential_Address_(Customer-Prior)",
+              "order": 770
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:8"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 8,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "164 Booran Road, Glen Huntly, VIC 3163",
+          "questionId": "Q_AD_Residential_Address_(CustomerPrior)",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "String",
+          "sectionOrder": 5,
+          "prompt": "What [is/was] [your/their] prior residential address?",
+          "fieldId": "F_AD_Residential_Address_(Customer-Prior)",
+          "order": 770
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:8"
+      },
+      "end": {
+        "identity": 9,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "1",
+          "questionId": "Q_AD_Individuals_on_Lease",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "Enum (Single)",
+          "sectionOrder": 6,
+          "prompt": "How many individuals are on the lease?",
+          "fieldId": "F_AD_Individuals_on_Lease",
+          "order": 780
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:9"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 8,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "164 Booran Road, Glen Huntly, VIC 3163",
+              "questionId": "Q_AD_Residential_Address_(CustomerPrior)",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "String",
+              "sectionOrder": 5,
+              "prompt": "What [is/was] [your/their] prior residential address?",
+              "fieldId": "F_AD_Residential_Address_(Customer-Prior)",
+              "order": 770
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:8"
+          },
+          "relationship": {
+            "identity": 1152921504606846984,
+            "start": 8,
+            "end": 9,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "Q_AD_Residential_Status_(Customer) = Renting",
+              "order": 780
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606846984",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:8",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:9"
+          },
+          "end": {
+            "identity": 9,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "1",
+              "questionId": "Q_AD_Individuals_on_Lease",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "Enum (Single)",
+              "sectionOrder": 6,
+              "prompt": "How many individuals are on the lease?",
+              "fieldId": "F_AD_Individuals_on_Lease",
+              "order": 780
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:9"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 9,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "1",
+          "questionId": "Q_AD_Individuals_on_Lease",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "Enum (Single)",
+          "sectionOrder": 6,
+          "prompt": "How many individuals are on the lease?",
+          "fieldId": "F_AD_Individuals_on_Lease",
+          "order": 780
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:9"
+      },
+      "end": {
+        "identity": 10,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "$1,500,000",
+          "questionId": "Q_AD_Property_Value",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "Integer",
+          "sectionOrder": 7,
+          "prompt": "When is the estimated value of this property?",
+          "fieldId": "F_AD_Property_Value",
+          "order": 790
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:10"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 9,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "1",
+              "questionId": "Q_AD_Individuals_on_Lease",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "Enum (Single)",
+              "sectionOrder": 6,
+              "prompt": "How many individuals are on the lease?",
+              "fieldId": "F_AD_Individuals_on_Lease",
+              "order": 780
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:9"
+          },
+          "relationship": {
+            "identity": 1152921504606846985,
+            "start": 9,
+            "end": 10,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "Q_AD_Residential_Status_(Customer) = Outright Owner",
+              "order": 790
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606846985",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:9",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:10"
+          },
+          "end": {
+            "identity": 10,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "$1,500,000",
+              "questionId": "Q_AD_Property_Value",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "Integer",
+              "sectionOrder": 7,
+              "prompt": "When is the estimated value of this property?",
+              "fieldId": "F_AD_Property_Value",
+              "order": 790
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:10"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 11,
+        "labels": [
+          "Section"
+        ],
+        "properties": {
+          "name": "Employment ",
+          "sectionId": "Employment "
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:11"
+      },
+      "end": {
+        "identity": 12,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Employed",
+          "questionId": "Q_AD_Employment_Status",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "Enum (Multi)",
+          "sectionOrder": 1,
+          "prompt": "What [is/was] [your/their] current employment status?",
+          "fieldId": "F_AD_Employment_Status",
+          "order": 800
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:12"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 11,
+            "labels": [
+              "Section"
+            ],
+            "properties": {
+              "name": "Employment ",
+              "sectionId": "Employment "
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:11"
+          },
+          "relationship": {
+            "identity": 1152921504606846987,
+            "start": 11,
+            "end": 12,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "-",
+              "order": 800
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606846987",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:11",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:12"
+          },
+          "end": {
+            "identity": 12,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Employed",
+              "questionId": "Q_AD_Employment_Status",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "Enum (Multi)",
+              "sectionOrder": 1,
+              "prompt": "What [is/was] [your/their] current employment status?",
+              "fieldId": "F_AD_Employment_Status",
+              "order": 800
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:12"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 12,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Employed",
+          "questionId": "Q_AD_Employment_Status",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "Enum (Multi)",
+          "sectionOrder": 1,
+          "prompt": "What [is/was] [your/their] current employment status?",
+          "fieldId": "F_AD_Employment_Status",
+          "order": 800
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:12"
+      },
+      "end": {
+        "identity": 13,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "",
+          "questionId": "Q_AD_Employment_Type(Current)",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "Enum (Single)",
+          "sectionOrder": 2,
+          "prompt": "What [is/was] [your/their] current employment type?",
+          "fieldId": "F_AD_Employment_Type(Current)",
+          "order": 810
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:13"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 12,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Employed",
+              "questionId": "Q_AD_Employment_Status",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "Enum (Multi)",
+              "sectionOrder": 1,
+              "prompt": "What [is/was] [your/their] current employment status?",
+              "fieldId": "F_AD_Employment_Status",
+              "order": 800
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:12"
+          },
+          "relationship": {
+            "identity": 1152921504606846988,
+            "start": 12,
+            "end": 13,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "Q_AD_Employment_Status = Employed",
+              "order": 810
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606846988",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:12",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:13"
+          },
+          "end": {
+            "identity": 13,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "",
+              "questionId": "Q_AD_Employment_Type(Current)",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "Enum (Single)",
+              "sectionOrder": 2,
+              "prompt": "What [is/was] [your/their] current employment type?",
+              "fieldId": "F_AD_Employment_Type(Current)",
+              "order": 810
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:13"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 13,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "",
+          "questionId": "Q_AD_Employment_Type(Current)",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "Enum (Single)",
+          "sectionOrder": 2,
+          "prompt": "What [is/was] [your/their] current employment type?",
+          "fieldId": "F_AD_Employment_Type(Current)",
+          "order": 810
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:13"
+      },
+      "end": {
+        "identity": 14,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "",
+          "questionId": "Q_AD_Employment_Occupation(Current)",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "String",
+          "sectionOrder": 3,
+          "prompt": "What [is/was] [your/their] current occupation?",
+          "fieldId": "F_AD_Employment_Occupation(Current)",
+          "order": 820
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:14"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 13,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "",
+              "questionId": "Q_AD_Employment_Type(Current)",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "Enum (Single)",
+              "sectionOrder": 2,
+              "prompt": "What [is/was] [your/their] current employment type?",
+              "fieldId": "F_AD_Employment_Type(Current)",
+              "order": 810
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:13"
+          },
+          "relationship": {
+            "identity": 1152921504606846989,
+            "start": 13,
+            "end": 14,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "Q_AD_Employment_Status = Employed",
+              "order": 820
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606846989",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:13",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:14"
+          },
+          "end": {
+            "identity": 14,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "",
+              "questionId": "Q_AD_Employment_Occupation(Current)",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "String",
+              "sectionOrder": 3,
+              "prompt": "What [is/was] [your/their] current occupation?",
+              "fieldId": "F_AD_Employment_Occupation(Current)",
+              "order": 820
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:14"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 14,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "",
+          "questionId": "Q_AD_Employment_Occupation(Current)",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "String",
+          "sectionOrder": 3,
+          "prompt": "What [is/was] [your/their] current occupation?",
+          "fieldId": "F_AD_Employment_Occupation(Current)",
+          "order": 820
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:14"
+      },
+      "end": {
+        "identity": 15,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "22-Dec-19",
+          "questionId": "Q_AD_Employment_Time_Period",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "Date",
+          "sectionOrder": 4,
+          "prompt": "How long [have/did] [you/they] [worked/work] here (in years and months)?",
+          "fieldId": "F_AD_Employment_Time_Period",
+          "order": 830
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:15"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 14,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "",
+              "questionId": "Q_AD_Employment_Occupation(Current)",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "String",
+              "sectionOrder": 3,
+              "prompt": "What [is/was] [your/their] current occupation?",
+              "fieldId": "F_AD_Employment_Occupation(Current)",
+              "order": 820
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:14"
+          },
+          "relationship": {
+            "identity": 1152921504606846990,
+            "start": 14,
+            "end": 15,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "Q_AD_Employment_Status = Employed",
+              "order": 830
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606846990",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:14",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:15"
+          },
+          "end": {
+            "identity": 15,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "22-Dec-19",
+              "questionId": "Q_AD_Employment_Time_Period",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "Date",
+              "sectionOrder": 4,
+              "prompt": "How long [have/did] [you/they] [worked/work] here (in years and months)?",
+              "fieldId": "F_AD_Employment_Time_Period",
+              "order": 830
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:15"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 15,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "22-Dec-19",
+          "questionId": "Q_AD_Employment_Time_Period",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "Date",
+          "sectionOrder": 4,
+          "prompt": "How long [have/did] [you/they] [worked/work] here (in years and months)?",
+          "fieldId": "F_AD_Employment_Time_Period",
+          "order": 830
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:15"
+      },
+      "end": {
+        "identity": 16,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Full Time",
+          "questionId": "Q_AD_Employment_Type(Prior)",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "Enum (Single)",
+          "sectionOrder": 5,
+          "prompt": "What [is/was] [your/their] prior employment type?",
+          "fieldId": "F_AD_Employment_Type(Prior)",
+          "order": 840
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:16"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 15,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "22-Dec-19",
+              "questionId": "Q_AD_Employment_Time_Period",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "Date",
+              "sectionOrder": 4,
+              "prompt": "How long [have/did] [you/they] [worked/work] here (in years and months)?",
+              "fieldId": "F_AD_Employment_Time_Period",
+              "order": 830
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:15"
+          },
+          "relationship": {
+            "identity": 1152921504606846991,
+            "start": 15,
+            "end": 16,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "Q_AD_Employment_Time_Period < 24 months",
+              "order": 840
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606846991",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:15",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:16"
+          },
+          "end": {
+            "identity": 16,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Full Time",
+              "questionId": "Q_AD_Employment_Type(Prior)",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "Enum (Single)",
+              "sectionOrder": 5,
+              "prompt": "What [is/was] [your/their] prior employment type?",
+              "fieldId": "F_AD_Employment_Type(Prior)",
+              "order": 840
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:16"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 16,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Full Time",
+          "questionId": "Q_AD_Employment_Type(Prior)",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "Enum (Single)",
+          "sectionOrder": 5,
+          "prompt": "What [is/was] [your/their] prior employment type?",
+          "fieldId": "F_AD_Employment_Type(Prior)",
+          "order": 840
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:16"
+      },
+      "end": {
+        "identity": 17,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Plumber",
+          "questionId": "Q_AD_Employment_Occupation(Prior)",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "String",
+          "sectionOrder": 6,
+          "prompt": "What [is/was] [your/their] prior occupation?",
+          "fieldId": "F_AD_Employment_Occupation(Prior)",
+          "order": 850
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:17"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 16,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Full Time",
+              "questionId": "Q_AD_Employment_Type(Prior)",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "Enum (Single)",
+              "sectionOrder": 5,
+              "prompt": "What [is/was] [your/their] prior employment type?",
+              "fieldId": "F_AD_Employment_Type(Prior)",
+              "order": 840
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:16"
+          },
+          "relationship": {
+            "identity": 1152921504606846992,
+            "start": 16,
+            "end": 17,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "Q_AD_Employment_Time_Period < 24 months",
+              "order": 850
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606846992",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:16",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:17"
+          },
+          "end": {
+            "identity": 17,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Plumber",
+              "questionId": "Q_AD_Employment_Occupation(Prior)",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "String",
+              "sectionOrder": 6,
+              "prompt": "What [is/was] [your/their] prior occupation?",
+              "fieldId": "F_AD_Employment_Occupation(Prior)",
+              "order": 850
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:17"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 17,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Plumber",
+          "questionId": "Q_AD_Employment_Occupation(Prior)",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "String",
+          "sectionOrder": 6,
+          "prompt": "What [is/was] [your/their] prior occupation?",
+          "fieldId": "F_AD_Employment_Occupation(Prior)",
+          "order": 850
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:17"
+      },
+      "end": {
+        "identity": 18,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Coles",
+          "questionId": "Q_AD_Employer_Name",
+          "stage": "App",
+          "heading": "Application",
+          "dataType": "String",
+          "sectionOrder": 7,
+          "prompt": "What [is/was] [your/their] employer's company name?",
+          "fieldId": "F_AD_Employer_Name",
+          "order": 860
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:18"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 17,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Plumber",
+              "questionId": "Q_AD_Employment_Occupation(Prior)",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "String",
+              "sectionOrder": 6,
+              "prompt": "What [is/was] [your/their] prior occupation?",
+              "fieldId": "F_AD_Employment_Occupation(Prior)",
+              "order": 850
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:17"
+          },
+          "relationship": {
+            "identity": 1152921504606846993,
+            "start": 17,
+            "end": 18,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "Q_AD_Employment_Status = Employed",
+              "order": 860
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606846993",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:17",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:18"
+          },
+          "end": {
+            "identity": 18,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Coles",
+              "questionId": "Q_AD_Employer_Name",
+              "stage": "App",
+              "heading": "Application",
+              "dataType": "String",
+              "sectionOrder": 7,
+              "prompt": "What [is/was] [your/their] employer's company name?",
+              "fieldId": "F_AD_Employer_Name",
+              "order": 860
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:18"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 18,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Coles",
+          "questionId": "Q_AD_Employer_Name",
+          "stage": "App",
+          "heading": "Application",
+          "dataType": "String",
+          "sectionOrder": 7,
+          "prompt": "What [is/was] [your/their] employer's company name?",
+          "fieldId": "F_AD_Employer_Name",
+          "order": 860
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:18"
+      },
+      "end": {
+        "identity": 19,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Yes",
+          "questionId": "Q_AD_Probation",
+          "stage": "Qualify",
+          "heading": "Application",
+          "dataType": "Boolean",
+          "sectionOrder": 8,
+          "prompt": "Are [you/they] on probation?",
+          "fieldId": "F_AD_Probation",
+          "order": 870
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:19"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 18,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Coles",
+              "questionId": "Q_AD_Employer_Name",
+              "stage": "App",
+              "heading": "Application",
+              "dataType": "String",
+              "sectionOrder": 7,
+              "prompt": "What [is/was] [your/their] employer's company name?",
+              "fieldId": "F_AD_Employer_Name",
+              "order": 860
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:18"
+          },
+          "relationship": {
+            "identity": 1152921504606846994,
+            "start": 18,
+            "end": 19,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "Q_AD_Employment_Time_Period < 1 year",
+              "order": 870
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606846994",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:18",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:19"
+          },
+          "end": {
+            "identity": 19,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Yes",
+              "questionId": "Q_AD_Probation",
+              "stage": "Qualify",
+              "heading": "Application",
+              "dataType": "Boolean",
+              "sectionOrder": 8,
+              "prompt": "Are [you/they] on probation?",
+              "fieldId": "F_AD_Probation",
+              "order": 870
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:19"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 28,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Perkins",
+          "questionId": "Q_AD_Last_Name",
+          "stage": "CR",
+          "heading": "Get Quote",
+          "dataType": "String",
+          "sectionOrder": 3,
+          "prompt": "What is your last name?",
+          "fieldId": "F_AD_Last_Name",
+          "order": 50
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:28"
+      },
+      "end": {
+        "identity": 29,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Male",
+          "questionId": "Q_AD_Gender",
+          "stage": "CR",
+          "heading": "Get Quote",
+          "dataType": "String",
+          "sectionOrder": 4,
+          "prompt": "What is your gender?",
+          "fieldId": "F_AD_Gender",
+          "order": 60
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:29"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 28,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Perkins",
+              "questionId": "Q_AD_Last_Name",
+              "stage": "CR",
+              "heading": "Get Quote",
+              "dataType": "String",
+              "sectionOrder": 3,
+              "prompt": "What is your last name?",
+              "fieldId": "F_AD_Last_Name",
+              "order": 50
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:28"
+          },
+          "relationship": {
+            "identity": 1152921504606847004,
+            "start": 28,
+            "end": 29,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "",
+              "order": 60
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606847004",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:28",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:29"
+          },
+          "end": {
+            "identity": 29,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Male",
+              "questionId": "Q_AD_Gender",
+              "stage": "CR",
+              "heading": "Get Quote",
+              "dataType": "String",
+              "sectionOrder": 4,
+              "prompt": "What is your gender?",
+              "fieldId": "F_AD_Gender",
+              "order": 60
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:29"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 29,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Male",
+          "questionId": "Q_AD_Gender",
+          "stage": "CR",
+          "heading": "Get Quote",
+          "dataType": "String",
+          "sectionOrder": 4,
+          "prompt": "What is your gender?",
+          "fieldId": "F_AD_Gender",
+          "order": 60
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:29"
+      },
+      "end": {
+        "identity": 30,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Refinance",
+          "questionId": "Q_LD_Loan_Purpose",
+          "stage": "Magic 10",
+          "heading": "Get Quote",
+          "dataType": "Enum (Single)",
+          "sectionOrder": 5,
+          "prompt": "What is the purpose of the loan?",
+          "fieldId": "F_LD_Loan_Purpose",
+          "order": 110
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:30"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 29,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Male",
+              "questionId": "Q_AD_Gender",
+              "stage": "CR",
+              "heading": "Get Quote",
+              "dataType": "String",
+              "sectionOrder": 4,
+              "prompt": "What is your gender?",
+              "fieldId": "F_AD_Gender",
+              "order": 60
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:29"
+          },
+          "relationship": {
+            "identity": 1152921504606847005,
+            "start": 29,
+            "end": 30,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "",
+              "order": 110
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606847005",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:29",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:30"
+          },
+          "end": {
+            "identity": 30,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Refinance",
+              "questionId": "Q_LD_Loan_Purpose",
+              "stage": "Magic 10",
+              "heading": "Get Quote",
+              "dataType": "Enum (Single)",
+              "sectionOrder": 5,
+              "prompt": "What is the purpose of the loan?",
+              "fieldId": "F_LD_Loan_Purpose",
+              "order": 110
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:30"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 30,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Refinance",
+          "questionId": "Q_LD_Loan_Purpose",
+          "stage": "Magic 10",
+          "heading": "Get Quote",
+          "dataType": "Enum (Single)",
+          "sectionOrder": 5,
+          "prompt": "What is the purpose of the loan?",
+          "fieldId": "F_LD_Loan_Purpose",
+          "order": 110
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:30"
+      },
+      "end": {
+        "identity": 31,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Car",
+          "questionId": "Q_VD_Asset_Type",
+          "stage": "Magic 10",
+          "heading": "Get Quote",
+          "dataType": "Enum (Single)",
+          "sectionOrder": 6,
+          "prompt": "What type of vehicle do you want to buy?",
+          "fieldId": "F_LD_Asset_Type",
+          "order": 120
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:31"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 30,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Refinance",
+              "questionId": "Q_LD_Loan_Purpose",
+              "stage": "Magic 10",
+              "heading": "Get Quote",
+              "dataType": "Enum (Single)",
+              "sectionOrder": 5,
+              "prompt": "What is the purpose of the loan?",
+              "fieldId": "F_LD_Loan_Purpose",
+              "order": 110
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:30"
+          },
+          "relationship": {
+            "identity": 1152921504606847006,
+            "start": 30,
+            "end": 31,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "",
+              "order": 120
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606847006",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:30",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:31"
+          },
+          "end": {
+            "identity": 31,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Car",
+              "questionId": "Q_VD_Asset_Type",
+              "stage": "Magic 10",
+              "heading": "Get Quote",
+              "dataType": "Enum (Single)",
+              "sectionOrder": 6,
+              "prompt": "What type of vehicle do you want to buy?",
+              "fieldId": "F_LD_Asset_Type",
+              "order": 120
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:31"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 31,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Car",
+          "questionId": "Q_VD_Asset_Type",
+          "stage": "Magic 10",
+          "heading": "Get Quote",
+          "dataType": "Enum (Single)",
+          "sectionOrder": 6,
+          "prompt": "What type of vehicle do you want to buy?",
+          "fieldId": "F_LD_Asset_Type",
+          "order": 120
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:31"
+      },
+      "end": {
+        "identity": 32,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Yes",
+          "questionId": "Q_VD_EV_Status",
+          "stage": "Qualify",
+          "heading": "Get Quote",
+          "dataType": "Boolean",
+          "sectionOrder": 7,
+          "prompt": "Is the vehicle an electric vehicle (EV)?",
+          "fieldId": "F_VD_EV_Status",
+          "order": 130
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:32"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 31,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Car",
+              "questionId": "Q_VD_Asset_Type",
+              "stage": "Magic 10",
+              "heading": "Get Quote",
+              "dataType": "Enum (Single)",
+              "sectionOrder": 6,
+              "prompt": "What type of vehicle do you want to buy?",
+              "fieldId": "F_LD_Asset_Type",
+              "order": 120
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:31"
+          },
+          "relationship": {
+            "identity": 1152921504606847007,
+            "start": 31,
+            "end": 32,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "",
+              "order": 130
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606847007",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:31",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:32"
+          },
+          "end": {
+            "identity": 32,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Yes",
+              "questionId": "Q_VD_EV_Status",
+              "stage": "Qualify",
+              "heading": "Get Quote",
+              "dataType": "Boolean",
+              "sectionOrder": 7,
+              "prompt": "Is the vehicle an electric vehicle (EV)?",
+              "fieldId": "F_VD_EV_Status",
+              "order": 130
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:32"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 32,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Yes",
+          "questionId": "Q_VD_EV_Status",
+          "stage": "Qualify",
+          "heading": "Get Quote",
+          "dataType": "Boolean",
+          "sectionOrder": 7,
+          "prompt": "Is the vehicle an electric vehicle (EV)?",
+          "fieldId": "F_VD_EV_Status",
+          "order": 130
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:32"
+      },
+      "end": {
+        "identity": 0,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Me only",
+          "questionId": "Q_AD_Number_of_Applicants",
+          "stage": "Magic 10",
+          "heading": "Get Quote",
+          "dataType": "Enum (Single)",
+          "sectionOrder": 8,
+          "prompt": "Are you applying by yourself or with another applicant?",
+          "fieldId": "F_AD_Number_of_Applicants",
+          "order": 200
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:0"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 32,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Yes",
+              "questionId": "Q_VD_EV_Status",
+              "stage": "Qualify",
+              "heading": "Get Quote",
+              "dataType": "Boolean",
+              "sectionOrder": 7,
+              "prompt": "Is the vehicle an electric vehicle (EV)?",
+              "fieldId": "F_VD_EV_Status",
+              "order": 130
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:32"
+          },
+          "relationship": {
+            "identity": 1152921504606847008,
+            "start": 32,
+            "end": 0,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "",
+              "order": 200
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606847008",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:32",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:0"
+          },
+          "end": {
+            "identity": 0,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Me only",
+              "questionId": "Q_AD_Number_of_Applicants",
+              "stage": "Magic 10",
+              "heading": "Get Quote",
+              "dataType": "Enum (Single)",
+              "sectionOrder": 8,
+              "prompt": "Are you applying by yourself or with another applicant?",
+              "fieldId": "F_AD_Number_of_Applicants",
+              "order": 200
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:0"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 36,
+        "labels": [
+          "Section"
+        ],
+        "properties": {
+          "name": "Get a Quote",
+          "sectionId": "Get a Quote"
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:36"
+      },
+      "end": {
+        "identity": 37,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Jessica",
+          "questionId": "Q_AD_First_Name",
+          "stage": "CR",
+          "heading": "Get Quote",
+          "dataType": "String",
+          "sectionOrder": 1,
+          "prompt": "What is your first name?",
+          "fieldId": "F_AD_First_Name",
+          "order": 30
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:37"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 36,
+            "labels": [
+              "Section"
+            ],
+            "properties": {
+              "name": "Get a Quote",
+              "sectionId": "Get a Quote"
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:36"
+          },
+          "relationship": {
+            "identity": 1152921504606847012,
+            "start": 36,
+            "end": 37,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "",
+              "order": 30
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606847012",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:36",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:37"
+          },
+          "end": {
+            "identity": 37,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Jessica",
+              "questionId": "Q_AD_First_Name",
+              "stage": "CR",
+              "heading": "Get Quote",
+              "dataType": "String",
+              "sectionOrder": 1,
+              "prompt": "What is your first name?",
+              "fieldId": "F_AD_First_Name",
+              "order": 30
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:37"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 37,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Jessica",
+          "questionId": "Q_AD_First_Name",
+          "stage": "CR",
+          "heading": "Get Quote",
+          "dataType": "String",
+          "sectionOrder": 1,
+          "prompt": "What is your first name?",
+          "fieldId": "F_AD_First_Name",
+          "order": 30
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:37"
+      },
+      "end": {
+        "identity": 38,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Rachel",
+          "questionId": "Q_AD_Middle_Name",
+          "stage": "CR",
+          "heading": "Get Quote",
+          "dataType": "String",
+          "sectionOrder": 2,
+          "prompt": "What is your middle name?",
+          "fieldId": "F_AD_Middle_Name",
+          "order": 40
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:38"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 37,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Jessica",
+              "questionId": "Q_AD_First_Name",
+              "stage": "CR",
+              "heading": "Get Quote",
+              "dataType": "String",
+              "sectionOrder": 1,
+              "prompt": "What is your first name?",
+              "fieldId": "F_AD_First_Name",
+              "order": 30
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:37"
+          },
+          "relationship": {
+            "identity": 1152921504606847013,
+            "start": 37,
+            "end": 38,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "",
+              "order": 40
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606847013",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:37",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:38"
+          },
+          "end": {
+            "identity": 38,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Rachel",
+              "questionId": "Q_AD_Middle_Name",
+              "stage": "CR",
+              "heading": "Get Quote",
+              "dataType": "String",
+              "sectionOrder": 2,
+              "prompt": "What is your middle name?",
+              "fieldId": "F_AD_Middle_Name",
+              "order": 40
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:38"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  },
+  {
+    "p": {
+      "start": {
+        "identity": 38,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Rachel",
+          "questionId": "Q_AD_Middle_Name",
+          "stage": "CR",
+          "heading": "Get Quote",
+          "dataType": "String",
+          "sectionOrder": 2,
+          "prompt": "What is your middle name?",
+          "fieldId": "F_AD_Middle_Name",
+          "order": 40
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:38"
+      },
+      "end": {
+        "identity": 28,
+        "labels": [
+          "Question"
+        ],
+        "properties": {
+          "exampleAnswer": "Perkins",
+          "questionId": "Q_AD_Last_Name",
+          "stage": "CR",
+          "heading": "Get Quote",
+          "dataType": "String",
+          "sectionOrder": 3,
+          "prompt": "What is your last name?",
+          "fieldId": "F_AD_Last_Name",
+          "order": 50
+        },
+        "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:28"
+      },
+      "segments": [
+        {
+          "start": {
+            "identity": 38,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Rachel",
+              "questionId": "Q_AD_Middle_Name",
+              "stage": "CR",
+              "heading": "Get Quote",
+              "dataType": "String",
+              "sectionOrder": 2,
+              "prompt": "What is your middle name?",
+              "fieldId": "F_AD_Middle_Name",
+              "order": 40
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:38"
+          },
+          "relationship": {
+            "identity": 1152921504606847014,
+            "start": 38,
+            "end": 28,
+            "type": "PRECEDES",
+            "properties": {
+              "askWhen": "",
+              "order": 50
+            },
+            "elementId": "5:b7bb25e2-6c90-4915-ac6b-1acc220d982b:1152921504606847014",
+            "startNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:38",
+            "endNodeElementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:28"
+          },
+          "end": {
+            "identity": 28,
+            "labels": [
+              "Question"
+            ],
+            "properties": {
+              "exampleAnswer": "Perkins",
+              "questionId": "Q_AD_Last_Name",
+              "stage": "CR",
+              "heading": "Get Quote",
+              "dataType": "String",
+              "sectionOrder": 3,
+              "prompt": "What is your last name?",
+              "fieldId": "F_AD_Last_Name",
+              "order": 50
+            },
+            "elementId": "4:b7bb25e2-6c90-4915-ac6b-1acc220d982b:28"
+          }
+        }
+      ],
+      "length": 1.0
+    }
+  }
+]
