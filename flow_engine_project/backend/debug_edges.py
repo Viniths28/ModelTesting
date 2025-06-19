@@ -3,8 +3,8 @@ from neo4j import GraphDatabase, basic_auth
 
 # Initialize neo_client with correct credentials  
 neo_client._driver = GraphDatabase.driver(
-    "bolt://localhost:7687", 
-    auth=basic_auth("neo4j", "test12345")
+    "bolt://localhost:7689", 
+    auth=basic_auth("neo4j", "testpassword")
 )
 
 def debug_graph_structure():

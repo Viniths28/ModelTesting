@@ -1,0 +1,5 @@
+Metadata-Version: 2.1
+Name: flow-engine
+Version: 0.1.0
+Summary: Graph-based Flow Builder Engine
+Requires-Python: >=3.8

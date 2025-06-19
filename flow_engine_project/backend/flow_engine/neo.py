@@ -27,9 +27,9 @@ from .logging import timed
 # ---------------------------------------------------------------------------
 # Environment configuration
 # ---------------------------------------------------------------------------
-NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7689")
 NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
-NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "test12345")
+NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "testpassword")
 
 # Retry policy constants
 _MAX_ATTEMPTS = int(os.getenv("NEO4J_MAX_RETRIES", "3"))

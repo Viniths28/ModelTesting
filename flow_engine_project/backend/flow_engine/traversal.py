@@ -17,6 +17,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple, Union
+import re  # NEW: needed for placeholder detection
 
 from loguru import logger
 
@@ -142,8 +143,16 @@ def _resolve_source_node(edge_rel, ctx: Context) -> Optional[Any]:  # type: igno
             elif src_expr.lower().startswith("python:"):
                 node = python_eval(src_expr, ctx.evaluator_ctx)
             else:
-                # Unsupported template syntax – skip for now
-                node = None
+                # ------------------------------------------------------------------
+                # NEW: Support variable placeholder syntax e.g. '{{ current_applicant }}'
+                # ------------------------------------------------------------------
+                _tmpl_re = re.compile(r"\{\{\s*([\w\.]+)\s*\}\}")
+                match = _tmpl_re.fullmatch(src_expr)
+                if match:
+                    var_name = match.group(1).split(".")[0]  # root variable name
+                    node = ctx.resolve_var(var_name)
+                else:
+                    node = None
         except Exception as exc:  # pragma: no cover
             logger.warning("Failed to resolve sourceNode: {}", exc)
             node = None

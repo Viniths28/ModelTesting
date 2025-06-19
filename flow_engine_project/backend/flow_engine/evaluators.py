@@ -46,9 +46,13 @@ def cypher_eval(statement: str, ctx: Dict[str, Any], timeout_ms: Optional[int] =
 
     logger.debug("Evaluating Cypher expression with ctx keys {}", list(ctx.keys()))
 
+    # Strip private helper keys (e.g. "__ctx__") so we don't pass unsupported
+    # Python objects (like the Context instance) to the Neo4j driver.
+    safe_params = {k: v for k, v in ctx.items() if not k.startswith("__")}
+
     # Execute query – runtime timeout is currently handled at DB/driver level.
     with neo_client._driver.session() as _session:
-        records = list(_session.run(statement, **ctx))
+        records = list(_session.run(statement, **safe_params))
 
     if len(records) > _ROW_CAP:
         raise ValueError(
