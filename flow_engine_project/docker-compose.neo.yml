@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  neo4j:
+    image: neo4j:5.14
+    environment:
+      NEO4J_AUTH: neo4j/changeme    # matches env.example
+    ports:
+      - "7687:7687"   # bolt
+      - "7474:7474"   # browser
+    volumes:
+      - neo4j_data:/data
+volumes:
+  neo4j_data: 
