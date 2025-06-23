@@ -1,0 +1,31 @@
+2025-06-20 19:52:44.082 | INFO     | app:lifespan:86 - Initializing debug interface database...
+2025-06-20 19:52:44.085 | INFO     | database:init_db:72 - Database initialized successfully
+2025-06-20 19:52:44.087 | INFO     | app:lifespan:88 - Debug interface ready!
+2025-06-20 19:53:58.061 | INFO     | app:debug_execute_flow:263 - Debug execution started
+2025-06-20 19:53:58.064 | INFO     | debug_engine:debug_walk_section:558 - Debug engine invoked for section SEC_0f962e4d-a932-4958-9352-b54e0ef92be5 | params={'sectionId': 'SEC_0f962e4d-a932-4958-9352-b54e0ef92be5', 'applicationId': 'Appl_123', 'applicantId': 'App001', 'isPrimaryFlow': True}
+2025-06-20 19:53:59.108 | INFO     | debug_engine:debug_walk_section:607 - Debug engine response | completed=False question={'questionId': 'Q_AD_First_Name'} nextSection=None debug_steps=2
+2025-06-20 19:53:59.155 | INFO     | app:debug_execute_flow:295 - Debug execution completed
+2025-06-20 19:54:05.826 | INFO     | app:debug_execute_flow:263 - Debug execution started
+2025-06-20 19:54:05.847 | INFO     | debug_engine:debug_walk_section:558 - Debug engine invoked for section SEC_0f962e4d-a932-4958-9352-b54e0ef92be5 | params={'sectionId': 'SEC_0f962e4d-a932-4958-9352-b54e0ef92be5', 'applicationId': 'Appl_123', 'applicantId': 'App001', 'isPrimaryFlow': True}
+2025-06-20 19:54:05.897 | INFO     | debug_engine:debug_walk_section:607 - Debug engine response | completed=False question={'questionId': 'Q_AD_First_Name'} nextSection=None debug_steps=2
+2025-06-20 19:54:05.914 | INFO     | app:debug_execute_flow:295 - Debug execution completed
+2025-06-20 19:54:07.944 | INFO     | app:debug_execute_flow:263 - Debug execution started
+2025-06-20 19:54:07.946 | INFO     | debug_engine:debug_walk_section:558 - Debug engine invoked for section SEC_0f962e4d-a932-4958-9352-b54e0ef92be5 | params={'sectionId': 'SEC_0f962e4d-a932-4958-9352-b54e0ef92be5', 'applicationId': 'Appl_123', 'applicantId': 'App001', 'isPrimaryFlow': True}
+2025-06-20 19:54:07.998 | INFO     | debug_engine:debug_walk_section:607 - Debug engine response | completed=False question={'questionId': 'Q_AD_First_Name'} nextSection=None debug_steps=2
+2025-06-20 19:54:08.011 | INFO     | app:debug_execute_flow:295 - Debug execution completed
+2025-06-20 19:54:08.966 | INFO     | app:debug_execute_flow:263 - Debug execution started
+2025-06-20 19:54:08.970 | INFO     | debug_engine:debug_walk_section:558 - Debug engine invoked for section SEC_0f962e4d-a932-4958-9352-b54e0ef92be5 | params={'sectionId': 'SEC_0f962e4d-a932-4958-9352-b54e0ef92be5', 'applicationId': 'Appl_123', 'applicantId': 'App001', 'isPrimaryFlow': True}
+2025-06-20 19:54:09.026 | INFO     | debug_engine:debug_walk_section:607 - Debug engine response | completed=False question={'questionId': 'Q_AD_First_Name'} nextSection=None debug_steps=2
+2025-06-20 19:54:09.049 | INFO     | app:debug_execute_flow:295 - Debug execution completed
+2025-06-20 20:05:22.948 | INFO     | app:debug_execute_flow:263 - Debug execution started
+2025-06-20 20:05:23.010 | INFO     | debug_engine:debug_walk_section:558 - Debug engine invoked for section SEC_0f962e4d-a932-4958-9352-b54e0ef92be5 | params={'sectionId': 'SEC_0f962e4d-a932-4958-9352-b54e0ef92be5', 'applicationId': 'Appl_123', 'applicantId': 'App001', 'isPrimaryFlow': True}
+2025-06-20 20:05:23.196 | INFO     | debug_engine:debug_walk_section:607 - Debug engine response | completed=False question={'questionId': 'Q_AD_First_Name'} nextSection=None debug_steps=2
+2025-06-20 20:05:23.250 | INFO     | app:debug_execute_flow:295 - Debug execution completed
+2025-06-20 20:05:31.583 | INFO     | app:debug_execute_flow:263 - Debug execution started
+2025-06-20 20:05:31.587 | INFO     | debug_engine:debug_walk_section:558 - Debug engine invoked for section SEC_0f962e4d-a932-4958-9352-b54e0ef92be5 | params={'sectionId': 'SEC_0f962e4d-a932-4958-9352-b54e0ef92be5', 'applicationId': 'Appl_123', 'applicantId': 'App001', 'isPrimaryFlow': True}
+2025-06-20 20:05:31.666 | INFO     | debug_engine:debug_walk_section:607 - Debug engine response | completed=False question={'questionId': 'Q_AD_First_Name'} nextSection=None debug_steps=2
+2025-06-20 20:05:31.684 | INFO     | app:debug_execute_flow:295 - Debug execution completed
+2025-06-20 20:05:33.622 | INFO     | app:debug_execute_flow:263 - Debug execution started
+2025-06-20 20:05:33.625 | INFO     | debug_engine:debug_walk_section:558 - Debug engine invoked for section SEC_0f962e4d-a932-4958-9352-b54e0ef92be5 | params={'sectionId': 'SEC_0f962e4d-a932-4958-9352-b54e0ef92be5', 'applicationId': 'Appl_123', 'applicantId': 'App001', 'isPrimaryFlow': True}
+2025-06-20 20:05:33.729 | INFO     | debug_engine:debug_walk_section:607 - Debug engine response | completed=False question={'questionId': 'Q_AD_First_Name'} nextSection=None debug_steps=2
+2025-06-20 20:05:33.773 | INFO     | app:debug_execute_flow:295 - Debug execution completed

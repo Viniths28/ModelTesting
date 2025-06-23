@@ -105,9 +105,9 @@ class Section(VersionedModel):
 
 
 class ActionType(str, Enum):
-    CREATE_PROPERTY_NODE = "CreatePropertyNode"
-    GOTO_SECTION = "GotoSection"
-    MARK_SECTION_COMPLETE = "MarkSectionComplete"
+    CREATE_NODE = "CreateNode"
+    GOTO_SECTION = "GoToSection"
+    COMPLETE_SECTION = "CompleteSection"
 
 
 class ActionBase(VersionedModel):
@@ -116,10 +116,11 @@ class ActionBase(VersionedModel):
     variables: Optional[List[VariableDef]]
 
 
-class CreatePropertyNodeAction(ActionBase):
-    actionType: Literal[ActionType.CREATE_PROPERTY_NODE] = ActionType.CREATE_PROPERTY_NODE
+class CreateNodeAction(ActionBase):
+    actionType: Literal[ActionType.CREATE_NODE] = ActionType.CREATE_NODE
+    nodeType: str
     cypher: str
-    returns: Optional[Dict[str, Any]]
+    returns: Optional[Dict[str, Any]] = None
 
 
 class GotoSectionAction(ActionBase):
@@ -128,12 +129,12 @@ class GotoSectionAction(ActionBase):
     props: Optional[Dict[str, Any]]
 
 
-class MarkSectionCompleteAction(ActionBase):
-    actionType: Literal[ActionType.MARK_SECTION_COMPLETE] = ActionType.MARK_SECTION_COMPLETE
-    cypher: str
+class CompleteSectionAction(ActionBase):
+    actionType: Literal[ActionType.COMPLETE_SECTION] = ActionType.COMPLETE_SECTION
+    cypher: Optional[str] = None
 
 
-Action = Union[CreatePropertyNodeAction, GotoSectionAction, MarkSectionCompleteAction]
+Action = Union[CreateNodeAction, GotoSectionAction, CompleteSectionAction]
 
 
 # ---------------------------------------------------------------------------
