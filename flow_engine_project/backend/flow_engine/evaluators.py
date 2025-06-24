@@ -27,13 +27,57 @@ _TMPL_RE = re.compile(r"\{\{\s*([\w\.]+)\s*\}\}")
 
 
 def _json_parse_if_possible(value: Any) -> Any:
-    """If *value* is a JSON string, return parsed object; else return original."""
+    """
+    If *value* is a JSON string, return parsed object; else return original.
+    
+    NOTE: We do NOT convert Neo4j objects here anymore, as that breaks
+    internal processing that expects Node objects. Neo4j object handling
+    is now done only in _to_json_safe for final serialization.
+    """
+    # Original JSON parsing logic only
     if isinstance(value, str):
         try:
             return json.loads(value)
         except (ValueError, TypeError):
             return value
+    
     return value
+
+
+def _normalize_cypher_quotes(cypher_query: str) -> str:
+    """
+    Normalize single quotes to double quotes in Cypher string literals.
+    
+    This allows JSON payloads to use single quotes (easier to write/read) while
+    ensuring Cypher receives properly formatted double-quoted string literals.
+    
+    Examples:
+        {type:'CO_APPLICANT'} -> {type:"CO_APPLICANT"}
+        'Q_AD_Number_of_Applicants' -> "Q_AD_Number_of_Applicants"
+        'No' -> "No"
+    """
+    # Pattern to match Cypher string literals with single quotes
+    # This matches single-quoted strings that are likely to be Cypher string literals
+    # Handles: property values, string literals in comparisons, etc.
+    
+    # Match single-quoted strings, being careful to avoid issues with escaped quotes
+    pattern = r"'([^'\\]*(\\.[^'\\]*)*?)'"
+    
+    def replace_quotes(match):
+        # Extract the content between single quotes
+        content = match.group(1)
+        # Return the same content wrapped in double quotes
+        return f'"{content}"'
+    
+    normalized = re.sub(pattern, replace_quotes, cypher_query)
+    
+    # Log the normalization if changes were made
+    if normalized != cypher_query:
+        logger.debug("Normalized Cypher quotes: {} -> {}", 
+                    cypher_query[:100] + "..." if len(cypher_query) > 100 else cypher_query,
+                    normalized[:100] + "..." if len(normalized) > 100 else normalized)
+    
+    return normalized
 
 
 def cypher_eval(statement: str, ctx: Dict[str, Any], timeout_ms: Optional[int] = None) -> Any:
@@ -55,11 +99,29 @@ def cypher_eval(statement: str, ctx: Dict[str, Any], timeout_ms: Optional[int] =
     if statement.lstrip().lower().startswith("cypher:"):
         statement = statement.split(":", 1)[1].strip()
 
+    # NEW: Normalize single quotes to double quotes for Cypher compatibility
+    statement = _normalize_cypher_quotes(statement)
+
     logger.debug("Evaluating Cypher expression with ctx keys {}", list(ctx.keys()))
 
-    # Strip private helper keys (e.g. "__ctx__") so we don't pass unsupported
-    # Python objects (like the Context instance) to the Neo4j driver.
-    safe_params = {k: v for k, v in ctx.items() if not k.startswith("__")}
+    # Strip private helper keys (e.g. "__ctx__") and Neo4j objects so we don't pass 
+    # unsupported Python objects to the Neo4j driver.
+    safe_params = {}
+    for k, v in ctx.items():
+        if k.startswith("__"):
+            continue  # Skip private helper keys
+        
+        # Skip Neo4j objects that can't be serialized as query parameters
+        if Node is not None and isinstance(v, Node):
+            continue
+        if Relationship is not None and isinstance(v, Relationship):
+            continue
+        if Path is not None and isinstance(v, Path):
+            continue
+        if hasattr(v, '__class__') and 'neo4j' in str(type(v)):
+            continue
+            
+        safe_params[k] = v
 
     # Execute query – runtime timeout is currently handled at DB/driver level.
     with neo_client._driver.session() as _session:
@@ -106,7 +168,7 @@ def cypher_eval(statement: str, ctx: Dict[str, Any], timeout_ms: Optional[int] =
             parsed.append(_json_parse_if_possible(rec["value"]))
         else:
             # Multiple fields without 'value' - return full record
-            parsed.append({k: _json_parse_if_possible(v) for k, v in rec.items()})
+        parsed.append({k: _json_parse_if_possible(v) for k, v in rec.items()})
 
     return parsed
 
@@ -191,23 +253,33 @@ def _to_json_safe(val: Any):
     if isinstance(val, (str, int, float, bool)) or val is None:
         return val
 
-    if Node and isinstance(val, Node):
+    # Handle Neo4j graph objects properly
+    if Node is not None and isinstance(val, Node):
         return dict(val)
-    if Relationship and isinstance(val, Relationship):
+    
+    if Relationship is not None and isinstance(val, Relationship):
         return {
             "type": val.type,
-            "start": val.start_node.element_id,
-            "end": val.end_node.element_id,
+            "start": val.start_node.element_id if hasattr(val.start_node, 'element_id') else str(val.start_node.id),
+            "end": val.end_node.element_id if hasattr(val.end_node, 'element_id') else str(val.end_node.id),
             "properties": dict(val)
         }
-    if Path and isinstance(val, Path):
-        return [n.element_id for n in val.nodes]
+    
+    if Path is not None and isinstance(val, Path):
+        return [n.element_id if hasattr(n, 'element_id') else str(n.id) for n in val.nodes]
 
+    # Handle other potential Neo4j types
+    if hasattr(val, '__class__') and 'neo4j' in str(type(val)):
+        logger.warning("Converting unknown Neo4j type {} to string in _to_json_safe: {}", type(val).__name__, str(val))
+        return str(val)
+
+    # Handle collections recursively
     if isinstance(val, (list, tuple, set)):
         return [_to_json_safe(v) for v in val]
     if isinstance(val, dict):
         return {k: _to_json_safe(v) for k, v in val.items()}
 
+    # Fallback to string representation
     return str(val)
 
 

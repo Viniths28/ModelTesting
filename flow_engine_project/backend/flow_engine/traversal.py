@@ -47,22 +47,47 @@ class Context:
             return self.vars[name]
         var_def = self.var_defs.get(name)
         if not var_def:
+            logger.warning("Variable '{}' not found in variable definitions", name)
             self.vars[name] = None
             return None
 
         evaluator_str = var_def.get("cypher") or var_def.get("python")
         timeout_ms = var_def.get("timeoutMs", 500)
         if not evaluator_str:
+            logger.warning("Variable '{}' has no cypher or python evaluator", name)
             self.vars[name] = None
             return None
+
+        logger.debug("Resolving variable '{}' with evaluator: {}", name, evaluator_str[:100] + "..." if len(evaluator_str) > 100 else evaluator_str)
 
         try:
             if evaluator_str.lower().startswith("cypher:") or var_def.get("cypher"):
                 res = cypher_eval(evaluator_str, self.evaluator_ctx, timeout_ms=timeout_ms)
+                logger.debug("Variable '{}' resolved to: {} (type: {})", name, res, type(res).__name__)
             else:
                 res = python_eval(evaluator_str, self.evaluator_ctx, timeout_ms=timeout_ms)
+                logger.debug("Variable '{}' resolved to: {} (type: {})", name, res, type(res).__name__)
         except Exception as exc:
-            self.warnings.append({"variable": name, "message": str(exc)})
+            # Enhanced error handling with more specific error messages
+            error_type = type(exc).__name__
+            error_msg = str(exc)
+            
+            # Check for common Cypher syntax errors and provide helpful hints
+            if "CypherSyntaxError" in error_type:
+                if "Invalid input '}'" in error_msg and "'" in evaluator_str:
+                    hint = "Hint: Cypher string literals must use double quotes, not single quotes"
+                    enhanced_msg = f"{error_type}: {error_msg}. {hint}"
+                else:
+                    enhanced_msg = f"{error_type}: {error_msg}"
+            else:
+                enhanced_msg = f"{error_type}: {error_msg}"
+            
+            logger.error("Variable '{}' evaluation failed: {}", name, enhanced_msg)
+            self.warnings.append({
+                "variable": name, 
+                "message": enhanced_msg,
+                "evaluator": evaluator_str[:200] + "..." if len(evaluator_str) > 200 else evaluator_str
+            })
             res = None
 
         self.vars[name] = res

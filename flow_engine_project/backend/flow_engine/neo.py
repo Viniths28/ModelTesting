@@ -24,6 +24,11 @@ from tenacity import (
 )
 from .logging import timed
 
+try:
+    from neo4j.graph import Node, Relationship, Path  # type: ignore
+except ImportError:
+    Node = Relationship = Path = None  # type: ignore
+
 # ---------------------------------------------------------------------------
 # Environment configuration
 # ---------------------------------------------------------------------------
@@ -33,6 +38,33 @@ NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "testpassword")
 
 # Retry policy constants
 _MAX_ATTEMPTS = int(os.getenv("NEO4J_MAX_RETRIES", "3"))
+
+
+# ---------------------------------------------------------------------------
+# Helper functions
+# ---------------------------------------------------------------------------
+def _filter_neo4j_objects(params: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Filter out Neo4j objects from parameters to prevent serialization errors.
+    
+    This prevents "Values of type <class 'neo4j.graph.Node'> are not supported"
+    errors when Neo4j objects are passed as query parameters.
+    """
+    safe_params = {}
+    for k, v in params.items():
+        # Skip Neo4j objects that can't be serialized as query parameters
+        if Node is not None and isinstance(v, Node):
+            continue
+        if Relationship is not None and isinstance(v, Relationship):
+            continue
+        if Path is not None and isinstance(v, Path):
+            continue
+        if hasattr(v, '__class__') and 'neo4j' in str(type(v)):
+            continue
+            
+        safe_params[k] = v
+    
+    return safe_params
 
 
 # ---------------------------------------------------------------------------
@@ -81,9 +113,13 @@ class Neo4jClient:
     def run_cypher(self, statement: str, params: Dict[str, Any] | None = None):
         """Execute a Cypher query within a managed session."""
         params = params or {}
-        logger.debug("Cypher| {} | {}", statement, params)
+        
+        # Filter out Neo4j objects to prevent serialization errors
+        safe_params = _filter_neo4j_objects(params)
+        
+        logger.debug("Cypher| {} | {}", statement, safe_params)
         with self._driver.session() as session:
-            return session.run(statement, **params)
+            return session.run(statement, **safe_params)
 
 
 # ---------------------------------------------------------------------------
@@ -107,9 +143,13 @@ class AsyncNeo4jClient:
     ):  # type: ignore[override]
         """Execute a Cypher query asynchronously within a managed session."""
         params = params or {}
-        logger.debug("Cypher| {} | {}", statement, params)
+        
+        # Filter out Neo4j objects to prevent serialization errors
+        safe_params = _filter_neo4j_objects(params)
+        
+        logger.debug("Cypher| {} | {}", statement, safe_params)
         async with self._driver.session() as session:
-            return await session.run(statement, **params)
+            return await session.run(statement, **safe_params)
 
 
 # ---------------------------------------------------------------------------
