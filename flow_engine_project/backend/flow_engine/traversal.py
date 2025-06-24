@@ -429,7 +429,7 @@ def walk_section(start_section_id: str, ctx_dict: Dict[str, Any]) -> Dict[str, A
 
     ctx.var_defs.update(_load_section_vars(start_section_id))
 
-    return _traverse(section_node, ctx, start_section_id)
+    return _traverse(section_node, ctx, start_section_id) 
 
 
 # Helper -----------------------------------------------------------------
