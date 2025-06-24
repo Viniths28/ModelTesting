@@ -43,6 +43,10 @@ class DebugContext(Context):
         self.variable_evaluations: List[VariableEvaluation] = []
         self.condition_evaluations: List[ConditionEvaluation] = []
         self.source_node_history: List[SourceNodeInfo] = []
+        
+        # Action execution tracking (NEW)
+        self.executed_actions: Dict[str, int] = {}  # actionId -> execution_count
+        self.action_warnings: List[str] = []
     
     def add_traversal_step(
         self, 
@@ -179,6 +183,27 @@ class DebugContext(Context):
         self.source_node_history.append(info)
         logger.debug(f"Debug: Source node resolved to {node_id} ({status})")
     
+    def track_action_execution(self, action_id: str, action_type: str) -> bool:
+        """Track action execution and detect potential duplicates."""
+        if action_id in self.executed_actions:
+            self.executed_actions[action_id] += 1
+            execution_count = self.executed_actions[action_id]
+            
+            # Warn about potential duplicate actions
+            if action_type in ['CreateNode', 'CreateApplicant', 'CreateCoapplicant']:
+                warning = f"WARNING: {action_type} action '{action_id}' executed {execution_count} times - potential duplicate creation!"
+                self.action_warnings.append(warning)
+                logger.warning(warning)
+                return False  # Indicate potential issue
+            elif execution_count > 3:
+                warning = f"WARNING: Action '{action_id}' executed {execution_count} times - possible infinite loop!"
+                self.action_warnings.append(warning)
+                logger.warning(warning)
+        else:
+            self.executed_actions[action_id] = 1
+        
+        return True  # Indicate normal execution
+    
     def resolve_var(self, name: str) -> Any:
         """Enhanced variable resolution with debug tracking."""
         start_time = time.perf_counter()
@@ -267,19 +292,21 @@ class DebugContext(Context):
         return res
     
     def finalize_debug_info(self) -> DebugInfo:
-        """Finalize and return complete debug information."""
+        """Finalize and return comprehensive debug information."""
         total_duration = int((time.perf_counter() - self.start_time) * 1000)
         
-        return DebugInfo(
-            traversalPath=self.traversal_path,
-            variableEvaluations=self.variable_evaluations,
-            conditionEvaluations=self.condition_evaluations,
-            sourceNodeHistory=self.source_node_history,
-            totalDuration=total_duration,
-            errorCount=len([v for v in self.variable_evaluations if v.status == VariableStatus.ERROR]) +
-                       len([c for c in self.condition_evaluations if c.error]),
-            warningCount=len(self.warnings)
-        )
+        # Add action execution warnings to general warnings
+        all_warnings = self.warnings + self.action_warnings
+        
+        self.debug_info.totalDuration = total_duration
+        self.debug_info.traversalPath = self.traversal_path
+        self.debug_info.variables = self.variable_evaluations
+        self.debug_info.conditions = self.condition_evaluations
+        self.debug_info.sourceNodes = self.source_node_history
+        self.debug_info.warnings = all_warnings
+        self.debug_info.executedActions = self.executed_actions
+        
+        return self.debug_info
 
 def debug_evaluate_ask_when(expr: Optional[str], ctx: DebugContext, edge_id: str, source_id: str, target_id: str) -> bool:
     """Enhanced askWhen evaluation with debug tracking."""
@@ -508,7 +535,13 @@ def debug_traverse(current_node, ctx: DebugContext, section_id: str) -> Dict[str
         
         # Handle Action nodes
         if "actionType" in target_data:
-            logger.debug("Executing action {}", target_data["actionId"])
+            action_id = target_data["actionId"]
+            action_type = target_data.get("actionType", "Unknown")
+            
+            logger.debug("Executing action {}", action_id)
+            
+            # Track action execution and detect potential duplicates
+            is_safe_execution = ctx.track_action_execution(action_id, action_type)
             
             action_start = time.perf_counter()
             response = _execute_action(target_node, ctx)
@@ -516,14 +549,16 @@ def debug_traverse(current_node, ctx: DebugContext, section_id: str) -> Dict[str
             
             ctx.add_traversal_step(
                 node_type=NodeType.ACTION,
-                node_id=target_data["actionId"],
-                node_name=target_data.get("actionType", "Unknown Action"),
+                node_id=action_id,
+                node_name=action_type,
                 action="executed",
                 duration=action_duration,
                 details={
-                    "action_type": target_data.get("actionType"),
+                    "action_type": action_type,
                     "created_ids": response.get("createdNodeIds", []),
-                    "next_section": response.get("nextSectionId")
+                    "next_section": response.get("nextSectionId"),
+                    "execution_count": ctx.executed_actions.get(action_id, 1),
+                    "potential_duplicate": not is_safe_execution
                 }
             )
             

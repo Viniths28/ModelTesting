@@ -94,13 +94,37 @@ class SourceNodeInfo(BaseModel):
 
 class DebugInfo(BaseModel):
     """Comprehensive debug information for flow execution."""
-    traversalPath: List[TraversalStep] = Field(default_factory=list, description="Complete traversal path")
-    variableEvaluations: List[VariableEvaluation] = Field(default_factory=list, description="All variable evaluations")
-    conditionEvaluations: List[ConditionEvaluation] = Field(default_factory=list, description="All condition evaluations")
-    sourceNodeHistory: List[SourceNodeInfo] = Field(default_factory=list, description="Source node resolution history")
-    totalDuration: int = Field(..., description="Total execution duration in milliseconds")
-    errorCount: int = Field(default=0, description="Number of errors encountered")
-    warningCount: int = Field(default=0, description="Number of warnings encountered")
+    
+    # Core execution info
+    totalDuration: int = 0
+    traversalPath: List[TraversalStep] = []
+    
+    # Variable and condition tracking
+    variables: List[VariableEvaluation] = []
+    conditions: List[ConditionEvaluation] = []
+    sourceNodes: List[SourceNodeInfo] = []
+    
+    # Action execution tracking
+    executedActions: Dict[str, int] = {}  # actionId -> execution_count
+    
+    # Warnings and errors
+    warnings: List[str] = []
+    
+    # Computed metrics
+    @property
+    def errorCount(self) -> int:
+        return (
+            len([v for v in self.variables if v.status == VariableStatus.ERROR]) +
+            len([c for c in self.conditions if c.error])
+        )
+    
+    @property
+    def warningCount(self) -> int:
+        return len(self.warnings)
+    
+    @property
+    def duplicateActionCount(self) -> int:
+        return len([count for count in self.executedActions.values() if count > 1])
 
 class DebugExecuteResponse(BaseModel):
     """Enhanced response with debug information."""
