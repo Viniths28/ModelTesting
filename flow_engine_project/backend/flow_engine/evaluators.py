@@ -70,14 +70,43 @@ def cypher_eval(statement: str, ctx: Dict[str, Any], timeout_ms: Optional[int] =
             f"Cypher evaluation returned {len(records)} rows which exceeds the cap of {_ROW_CAP}."
         )
 
-    # Return single value convenience if exactly one record & field
-    if len(records) == 1 and len(records[0].keys()) == 1:
-        return _json_parse_if_possible(records[0][0])
-
-    # Attempt JSON parse for each record value
+    # Enhanced single value extraction logic
+    if len(records) == 1:
+        record = records[0]
+        keys = record.keys()
+        
+        # Case 1: Single unnamed field - return the raw value
+        if len(keys) == 1:
+            result = _json_parse_if_possible(record[0])
+            logger.debug("Cypher eval: Single field result -> {}", type(result).__name__)
+            return result
+        
+        # Case 2: Multiple fields but contains 'value' field - prioritize 'value'
+        elif "value" in keys:
+            result = _json_parse_if_possible(record["value"])
+            logger.debug("Cypher eval: Extracted 'value' field -> {}", type(result).__name__)
+            return result
+        
+        # Case 3: Multiple fields, no 'value' field - return full record
+        else:
+            result = {k: _json_parse_if_possible(v) for k, v in record.items()}
+            logger.debug("Cypher eval: Multiple fields, returning full record with keys: {}", list(keys))
+            return result
+    
+    # Multiple records - return array of processed records
     parsed = []
     for rec in records:
-        parsed.append({k: _json_parse_if_possible(v) for k, v in rec.items()})
+        # For each record, apply the same logic as single record case
+        keys = rec.keys()
+        if len(keys) == 1:
+            # Single field - extract the value
+            parsed.append(_json_parse_if_possible(rec[0]))
+        elif "value" in keys:
+            # Multiple fields with 'value' - prioritize 'value'
+            parsed.append(_json_parse_if_possible(rec["value"]))
+        else:
+            # Multiple fields without 'value' - return full record
+            parsed.append({k: _json_parse_if_possible(v) for k, v in rec.items()})
 
     return parsed
 
