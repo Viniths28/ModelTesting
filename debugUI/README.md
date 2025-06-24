@@ -310,6 +310,19 @@ export REACT_APP_API_URL=http://localhost:8001
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
+## 📝 Testing Notes
+
+### First Phase Testing
+- **Multiple Applicant Scenarios**: Testing flow execution with various applicant configurations
+- **Bug Tracking**: Identifying and documenting issues in multi-applicant flows
+- **Performance Analysis**: Monitoring execution times and resource usage
+- **Edge Case Handling**: Testing boundary conditions and error scenarios
+
+Known issues in first phase:
+- Multiple applicant variable resolution needs refinement
+- Complex conditional logic evaluation requires optimization
+- Performance bottlenecks in large flow visualizations
+
 ---
 
 **Built with ❤️ for comprehensive Flow Engine debugging** 
