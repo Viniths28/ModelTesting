@@ -81,11 +81,13 @@ def _normalize_cypher_quotes(cypher_query: str) -> str:
 
 
 def cypher_eval(statement: str, ctx: Dict[str, Any], timeout_ms: Optional[int] = None) -> Any:
-    """Execute a Cypher statement safely.
-
+    """
+    Evaluate a Cypher statement dynamically with template substitution.
+    
     Enforces a **row cap** of 100 to mitigate data exfiltration risks. If more
     rows are returned a `ValueError` is raised.
     """
+    
     # Guard: ensure we actually received a textual Cypher snippet – helps diagnose
     if not isinstance(statement, str):
         raise FlowError(
@@ -99,19 +101,16 @@ def cypher_eval(statement: str, ctx: Dict[str, Any], timeout_ms: Optional[int] =
     if statement.lstrip().lower().startswith("cypher:"):
         statement = statement.split(":", 1)[1].strip()
 
-    # NEW: Normalize single quotes to double quotes for Cypher compatibility
-    statement = _normalize_cypher_quotes(statement)
-
     logger.debug("Evaluating Cypher expression with ctx keys {}", list(ctx.keys()))
 
-    # Strip private helper keys (e.g. "__ctx__") and Neo4j objects so we don't pass 
-    # unsupported Python objects to the Neo4j driver.
+    # Normalize quotes to fix common syntax errors
+    statement = _normalize_cypher_quotes(statement)
+
+    # Filter out Neo4j objects to prevent serialization errors
     safe_params = {}
     for k, v in ctx.items():
         if k.startswith("__"):
-            continue  # Skip private helper keys
-        
-        # Skip Neo4j objects that can't be serialized as query parameters
+            continue
         if Node is not None and isinstance(v, Node):
             continue
         if Relationship is not None and isinstance(v, Relationship):
@@ -141,13 +140,13 @@ def cypher_eval(statement: str, ctx: Dict[str, Any], timeout_ms: Optional[int] =
         if len(keys) == 1:
             result = _json_parse_if_possible(record[0])
             logger.debug("Cypher eval: Single field result -> {}", type(result).__name__)
-            return result
+            return _fix_boolean_variable_result(result, statement)
         
         # Case 2: Multiple fields but contains 'value' field - prioritize 'value'
         elif "value" in keys:
             result = _json_parse_if_possible(record["value"])
             logger.debug("Cypher eval: Extracted 'value' field -> {}", type(result).__name__)
-            return result
+            return _fix_boolean_variable_result(result, statement)
         
         # Case 3: Multiple fields, no 'value' field - return full record
         else:
@@ -170,7 +169,35 @@ def cypher_eval(statement: str, ctx: Dict[str, Any], timeout_ms: Optional[int] =
             # Multiple fields without 'value' - return full record
             parsed.append({k: _json_parse_if_possible(v) for k, v in rec.items()})
 
-    return parsed
+    # Apply boolean fix to the entire result
+    return _fix_boolean_variable_result(parsed, statement)
+
+
+def _fix_boolean_variable_result(result: Any, statement: str) -> Any:
+    """
+    Permanent fix for variables that return empty arrays instead of boolean False.
+    
+    This handles the common case where existence checks like:
+    'RETURN d IS NOT NULL AS value' return [] instead of False when no data exists.
+    """
+    
+    # If result is an empty list and the query suggests it should be a boolean
+    if isinstance(result, list) and len(result) == 0:
+        # Check if this looks like a boolean existence check
+        statement_lower = statement.lower()
+        boolean_indicators = [
+            'is not null',
+            'count(',
+            '> 0',
+            'exists(',
+            'case when'
+        ]
+        
+        if any(indicator in statement_lower for indicator in boolean_indicators):
+            logger.debug("Fixed empty array result to False for boolean query: {}", statement[:100])
+            return False
+            
+    return result
 
 
 def python_eval(code_str: str, ctx: Dict[str, Any], timeout_ms: Optional[int] = None) -> Any:
