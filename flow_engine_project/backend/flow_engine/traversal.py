@@ -24,7 +24,6 @@ from loguru import logger
 from .evaluators import cypher_eval, python_eval
 from .models import EdgeType, EngineResponse, ActionType
 from .neo import run_cypher, neo_client
-from .errors import FlowError  # new import
 
 # ---------------------------------------------------------------------------
 # Context object
@@ -79,7 +78,6 @@ class Context:
         return {
             **self.input_params,
             "sourceNode": self.source_node,
-            "sourceNodeId": _get_source_node_id(self.source_node),
             **self.vars,
             "__ctx__": self,  # private backlink for lazy variable loading
         }
@@ -105,8 +103,8 @@ def _evaluate_ask_when(expr: Optional[str], ctx: Context) -> bool:
         # Default to python evaluator if no prefix
         return bool(python_eval(expr, ctx.evaluator_ctx))
     except Exception as exc:  # pragma: no cover
-        logger.warning("askWhen evaluation errored → raising FlowError: {}", exc)
-        raise FlowError(f"askWhen evaluation error: {exc}") from exc
+        logger.warning("askWhen evaluation errored → treating as FALSE: {}", exc)
+        return False
 
 
 # ---------------------------------------------------------------------------
@@ -172,27 +170,21 @@ def _question_answered(source_node, question_id: str) -> bool:
     if source_node is None:
         return False
 
-    src_id_val = _get_source_node_id(source_node)
-    if src_id_val is None:
+    try:
+        src_id = source_node.id  # type: ignore[attr-defined]
+    except AttributeError:
         return False
 
-    # Depending on the type of identifier construct match condition
-    if isinstance(src_id_val, int):
-        where_clause = "id(src) = $srcId"
-    else:
-        # treat as elementId (string)
-        where_clause = "elementId(src) = $srcId"
-
     cypher = (
-        f"""
+        """
         MATCH (src)
-        WHERE {where_clause}
-        MATCH (src)-[:SUPPLIES]->(:Datapoint)-[:ANSWERS]->(q {{questionId:$qid}})
+        WHERE id(src) = $srcId
+        MATCH (src)-[:SUPPLIES]->(:Datapoint)-[:ANSWERS]->(q {questionId:$qid})
         RETURN q LIMIT 1
         """
     )
     with neo_client._driver.session() as _session:
-        record = _session.run(cypher, srcId=src_id_val, qid=question_id).single()
+        record = _session.run(cypher, srcId=src_id, qid=question_id).single()
     return record is not None
 
 
@@ -216,15 +208,12 @@ def _resolve_action_source_node(action_node, ctx: Context) -> None:
         logger.warning("Failed to resolve action sourceNode: {}", exc)
 
 
-def _execute_action(action_node, ctx: Context, section_id: str) -> Dict[str, Any]:
+def _execute_action(action_node, ctx: Context) -> Dict[str, Any]:
     """Execute action node and return EngineResponse dict."""
 
     _resolve_action_source_node(action_node, ctx)
 
     action_type = action_node.get("actionType")  # type: ignore[index]
-    # Accept either Boolean or string values for returnImmediately so that
-    # data coming from UI layers that store properties as strings ('true'/'false')
-    # is handled gracefully.
     return_immediately = action_node.get("returnImmediately", True)  # type: ignore[index]
 
     # Defaults
@@ -232,47 +221,39 @@ def _execute_action(action_node, ctx: Context, section_id: str) -> Dict[str, Any
     created_ids: List[int] = []
     completed_flag = False
 
-    if action_type == ActionType.CREATE_NODE.value:
+    if action_type == ActionType.CREATE_PROPERTY_NODE.value:
         cypher = action_node.get("cypher")  # type: ignore[index]
         if cypher:
-            safe_params = {k: v for k, v in ctx.evaluator_ctx.items() if not k.startswith("__")}
             with neo_client._driver.session() as _session:
-                records = _session.run(cypher, **safe_params).values()
+                records = _session.run(cypher, **ctx.evaluator_ctx).values()
             # Collect any integer IDs returned in first column by convention
             created_ids = [row[0] for row in records if row]
 
     elif action_type == ActionType.GOTO_SECTION.value:
         next_section_id = action_node.get("nextSectionId")  # type: ignore[index]
 
-    elif action_type == ActionType.COMPLETE_SECTION.value:
+    elif action_type == ActionType.MARK_SECTION_COMPLETE.value:
         cypher = action_node.get("cypher")  # type: ignore[index]
         if cypher:
-            safe_params = {k: v for k, v in ctx.evaluator_ctx.items() if not k.startswith("__")}
-            run_cypher(cypher, safe_params)
+            run_cypher(cypher, ctx.evaluator_ctx)
         completed_flag = True
 
     else:
         logger.warning("Unknown action type {} – ignored", action_type)
 
     response = EngineResponse(
-        sectionId=section_id,
+        sectionId=ctx.input_params.get("sectionId", ""),
         question=None,
         nextSectionId=next_section_id,
         createdNodeIds=created_ids,
         completed=completed_flag,
         requestVariables=ctx.input_params,
-        sourceNode=_get_source_node_id(ctx.source_node),
+        sourceNode=ctx.source_node.id if ctx.source_node else None,
         vars={name: {"value": val} for name, val in ctx.vars.items()},
         warnings=ctx.warnings,
     ).dict()
 
-    if not return_immediately:
-        # Continue walking from this Action node to follow its outgoing edges
-        follow_resp = _traverse(action_node, ctx, section_id)
-        # Merge created IDs from this action with any downstream ones
-        follow_resp["createdNodeIds"] = created_ids + follow_resp.get("createdNodeIds", [])
-        return follow_resp
-
+    # If returnImmediately is False we could continue traversal (not yet supported)
     return response
 
 
@@ -366,7 +347,7 @@ def _traverse(current_node, ctx: Context, section_id: str) -> Dict[str, Any]:
                 completed=False,
                 createdNodeIds=[],
                 requestVariables=ctx.input_params,
-                sourceNode=_get_source_node_id(ctx.source_node),
+                sourceNode=ctx.source_node.id if ctx.source_node else None,
                 vars={name: {"value": val} for name, val in ctx.vars.items()},
                 warnings=ctx.warnings,
             ).dict()
@@ -376,7 +357,7 @@ def _traverse(current_node, ctx: Context, section_id: str) -> Dict[str, Any]:
         # --------------------------------------------------------------
         if "actionType" in target_node:
             logger.debug("Executing action {}", target_node["actionId"])
-            return _execute_action(target_node, ctx, section_id)
+            return _execute_action(target_node, ctx)
 
     # No edges matched → completed
     logger.debug("Node {} completed – no further edges", current_node)
@@ -387,7 +368,7 @@ def _traverse(current_node, ctx: Context, section_id: str) -> Dict[str, Any]:
         completed=True,
         createdNodeIds=[],
         requestVariables=ctx.input_params,
-        sourceNode=_get_source_node_id(ctx.source_node),
+        sourceNode=ctx.source_node.id if ctx.source_node else None,
         vars={name: {"value": val} for name, val in ctx.vars.items()},
         warnings=ctx.warnings,
     ).dict()
@@ -414,37 +395,6 @@ def walk_section(start_section_id: str, ctx_dict: Dict[str, Any]) -> Dict[str, A
     section_node = record["s"]
 
     ctx = Context(input_params=ctx_dict)
-    
-    # Resolve section-level sourceNode BEFORE loading variables
-    section_source_expr = section_node.get("sourceNode") if hasattr(section_node, "get") else None
-    if section_source_expr:
-        section_source_expr = section_source_expr.strip()
-        try:
-            if section_source_expr.lower().startswith("cypher:"):
-                ctx.source_node = cypher_eval(section_source_expr, ctx.evaluator_ctx)
-            elif section_source_expr.lower().startswith("python:"):
-                ctx.source_node = python_eval(section_source_expr, ctx.evaluator_ctx)
-        except Exception as exc:
-            logger.warning("Failed to resolve section sourceNode: {}", exc)
-
     ctx.var_defs.update(_load_section_vars(start_section_id))
 
-    return _traverse(section_node, ctx, start_section_id)
-
-
-# Helper -----------------------------------------------------------------
-def _get_source_node_id(node):
-    """Return a safe identifier for *node* that may be a Neo4j Node, dict, str or int."""
-    if node is None:
-        return None
-    # Neo4j 5 python driver Node has .element_id
-    if hasattr(node, "element_id"):
-        return node.element_id
-    # Neo4j 4 driver Node uses .id
-    if hasattr(node, "id"):
-        return node.id
-    # If we received a dict representing node properties
-    if isinstance(node, dict) and "id" in node:
-        return node["id"]
-    # Otherwise assume it is already a scalar identifier (str/int)
-    return node 
+    return _traverse(section_node, ctx, start_section_id) 

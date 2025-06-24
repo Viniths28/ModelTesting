@@ -22,10 +22,6 @@ class NextQuestionRequest(BaseModel):
     sectionId: str = Field(..., description="Section ID to start traversal from")
     applicationId: str
     applicantId: str
-    isPrimaryFlow: bool = Field(
-        default=True,
-        description="True for primary applicant flow, False for co-applicant flow.",
-    )
 
 
 @app.post("/v1/api/next_question_flow")
@@ -45,7 +41,6 @@ async def next_question_flow(payload: NextQuestionRequest):  # noqa: D401
                 applicationId=payload.applicationId,
                 applicantId=payload.applicantId,
                 sectionId=payload.sectionId,
-                isPrimaryFlow=payload.isPrimaryFlow,
             )
         response["traceId"] = trace_id
         return response

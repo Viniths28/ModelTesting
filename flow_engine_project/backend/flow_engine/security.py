@@ -77,10 +77,6 @@ def secure_eval_python(
     def _evaluate() -> Any:
         # Compile expression – we only allow *expressions*, not full statements.
         compiled = compile_restricted_eval(code_str)
-        # Handle RestrictedPython versions that return tuple
-        if isinstance(compiled, tuple):
-            compiled = compiled[0]  # first item is the compiled code object
-        logger.debug("RestrictedPython compiled type: {}", type(compiled))
         globals_dict = {
             "__builtins__": _builtins,
             **_ALLOWED_MODULES,

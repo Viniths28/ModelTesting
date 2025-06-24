@@ -1,7 +1,0 @@
-{
-  "include": ["."],
-  "extraPaths": [
-    "flow_engine_project/backend"
-  ],
-  "reportMissingImports": true
-} 

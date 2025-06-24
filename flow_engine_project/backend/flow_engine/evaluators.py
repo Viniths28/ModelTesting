@@ -12,12 +12,7 @@ from loguru import logger
 
 from .neo import run_cypher, neo_client
 from .security import secure_eval_python
-from .errors import EvaluatorTimeoutError, FlowError
-
-try:
-    from neo4j.graph import Node, Relationship, Path  # type: ignore
-except ImportError:
-    Node = Relationship = Path = None  # type: ignore
+from .errors import EvaluatorTimeoutError
 
 # Maximum rows to return from Cypher queries executed via evaluator
 _ROW_CAP = 100
@@ -42,14 +37,8 @@ def cypher_eval(statement: str, ctx: Dict[str, Any], timeout_ms: Optional[int] =
     Enforces a **row cap** of 100 to mitigate data exfiltration risks. If more
     rows are returned a `ValueError` is raised.
     """
-    # Guard: ensure we actually received a textual Cypher snippet – helps diagnose
-    if not isinstance(statement, str):
-        raise FlowError(
-            f"Cypher evaluator expected a string but received {type(statement).__name__}: {statement!r}"
-        )
-
     # First substitute templates
-    statement = _substitute_template(statement, ctx, python_mode=False)
+    statement = _substitute_template(statement, ctx)
 
     # Strip optional "cypher:" prefix
     if statement.lstrip().lower().startswith("cypher:"):
@@ -85,21 +74,12 @@ def cypher_eval(statement: str, ctx: Dict[str, Any], timeout_ms: Optional[int] =
 def python_eval(code_str: str, ctx: Dict[str, Any], timeout_ms: Optional[int] = None) -> Any:
     """Evaluate Python code in sandbox with timeout protection."""
 
-    # Guard: ensure snippet is a string for RestrictedPython
-    if not isinstance(code_str, str):
-        raise FlowError(
-            f"Python evaluator expected a string but received {type(code_str).__name__}: {code_str!r}"
-        )
-
-    # First substitute templates – python_mode ensures str values use repr()
-    code_str = _substitute_template(code_str, ctx, python_mode=True)
+    # First substitute templates
+    code_str = _substitute_template(code_str, ctx)
 
     # Strip optional prefix
     if code_str.lstrip().lower().startswith("python:"):
         code_str = code_str.split(":", 1)[1].strip()
-
-    # Debug: log final expression executed by RestrictedPython sandbox
-    logger.info("Sandbox exec: {}", code_str)
 
     try:
         result = secure_eval_python(code_str, ctx, timeout_ms=timeout_ms)
@@ -157,58 +137,13 @@ def _resolve_placeholder(expr: str, ctx: Dict[str, Any]):
     return val
 
 
-def _to_json_safe(val: Any):
-    """Convert values (including Neo4j types) into JSON-serialisable primitives."""
-    if isinstance(val, (str, int, float, bool)) or val is None:
-        return val
-
-    if Node and isinstance(val, Node):
-        return dict(val)
-    if Relationship and isinstance(val, Relationship):
-        return {
-            "type": val.type,
-            "start": val.start_node.element_id,
-            "end": val.end_node.element_id,
-            "properties": dict(val)
-        }
-    if Path and isinstance(val, Path):
-        return [n.element_id for n in val.nodes]
-
-    if isinstance(val, (list, tuple, set)):
-        return [_to_json_safe(v) for v in val]
-    if isinstance(val, dict):
-        return {k: _to_json_safe(v) for k, v in val.items()}
-
-    return str(val)
-
-
-def _substitute_template(text: str, ctx: Dict[str, Any], *, python_mode: bool = False) -> str:
-    """Replace `{{ var }}` placeholders.
-
-    When *python_mode* is True we serialise plain strings using ``repr`` so that
-    the resulting placeholder becomes a valid Python literal **without** the
-    extra JSON-style double quotes. For all other data types we fall back to
-    ``json.dumps`` so numbers, dicts, lists etc. remain valid literals in both
-    Python and Cypher contexts.
-    """
+def _substitute_template(text: str, ctx: Dict[str, Any]) -> str:
+    """Replace `{{ var }}` placeholders with JSON literals from ctx."""
 
     def _replace(match):
         expr = match.group(1)
         val = _resolve_placeholder(expr, ctx)
-
-        # For Python expressions we prefer repr() for primitive types so that
-        #   strings → 'Yes'
-        #   booleans → True / False (capitalised)
-        #   None     → None
-        # which are valid Python literals.
-        if python_mode and isinstance(val, (str, bool, int, float, type(None))):
-            return repr(val)
-
-        try:
-            json_literal = json.dumps(_to_json_safe(val))
-        except TypeError:
-            # Fallback: stringify value entirely
-            json_literal = json.dumps(str(val))
+        json_literal = json.dumps(val)
         return json_literal
 
     return _TMPL_RE.sub(_replace, text) 
