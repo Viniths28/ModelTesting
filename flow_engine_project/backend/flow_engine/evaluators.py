@@ -168,7 +168,7 @@ def cypher_eval(statement: str, ctx: Dict[str, Any], timeout_ms: Optional[int] =
             parsed.append(_json_parse_if_possible(rec["value"]))
         else:
             # Multiple fields without 'value' - return full record
-        parsed.append({k: _json_parse_if_possible(v) for k, v in rec.items()})
+            parsed.append({k: _json_parse_if_possible(v) for k, v in rec.items()})
 
     return parsed
 
