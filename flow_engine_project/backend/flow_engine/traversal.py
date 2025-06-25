@@ -197,6 +197,90 @@ def _question_answered(source_node, question_id: str) -> bool:
     if source_node is None:
         return False
 
+    # Enhanced logic: If source_node is an AddressHistory node, find the Applicant that owns it
+    actual_source_node = source_node
+    
+    # Check if source_node is an AddressHistory node
+    if hasattr(source_node, 'labels') and 'AddressHistory' in source_node.labels:
+        logger.debug("Source node is AddressHistory, finding parent Applicant for question check")
+        
+        # Get the AddressHistory node ID
+        history_id = _get_source_node_id(source_node)
+        if history_id is None:
+            return False
+            
+        # Query to find the Applicant that owns this AddressHistory
+        if isinstance(history_id, int):
+            history_where = "id(history) = $historyId"
+        else:
+            history_where = "elementId(history) = $historyId"
+            
+        find_applicant_cypher = f"""
+        MATCH (history:AddressHistory)
+        WHERE {history_where}
+        MATCH (applicant)-[:HAS_HISTORY_PROPERTY]->(history)
+        RETURN applicant
+        """
+        
+        with neo_client._driver.session() as _session:
+            applicant_record = _session.run(find_applicant_cypher, historyId=history_id).single()
+            
+        if applicant_record:
+            actual_source_node = applicant_record["applicant"]
+            logger.debug("Found parent Applicant for AddressHistory, checking from Applicant perspective")
+        else:
+            logger.warning("Could not find parent Applicant for AddressHistory node")
+            return False
+
+    src_id_val = _get_source_node_id(actual_source_node)
+    if src_id_val is None:
+        return False
+
+    # Depending on the type of identifier construct match condition
+    if isinstance(src_id_val, int):
+        where_clause = "id(src) = $srcId"
+    else:
+        # treat as elementId (string)
+        where_clause = "elementId(src) = $srcId"
+
+    # Check both direct SUPPLIES and AddressHistory-mediated SUPPLIES patterns
+    cypher = (
+        f"""
+        MATCH (src)
+        WHERE {where_clause}
+        
+        // Check direct pattern: (source)-[:SUPPLIES]->(datapoint)-[:ANSWERS]->(question)
+        OPTIONAL MATCH (src)-[:SUPPLIES]->(dp1:Datapoint)-[:ANSWERS]->(q1 {{questionId:$qid}})
+        
+        // Check AddressHistory pattern: (source)-[:HAS_HISTORY_PROPERTY]->(history)-[:SUPPLIES]->(datapoint)-[:ANSWERS]->(question)
+        OPTIONAL MATCH (src)-[:HAS_HISTORY_PROPERTY]->(history)-[:SUPPLIES]->(dp2:Datapoint)-[:ANSWERS]->(q2 {{questionId:$qid}})
+        
+        // Return true if either pattern found a match
+        RETURN CASE 
+            WHEN q1 IS NOT NULL OR q2 IS NOT NULL THEN true 
+            ELSE false 
+        END AS answered
+        """
+    )
+    with neo_client._driver.session() as _session:
+        record = _session.run(cypher, srcId=src_id_val, qid=question_id).single()
+    
+    return record["answered"] if record else False
+
+
+def _question_answered_in_current_context(source_node, question_id: str) -> bool:
+    """
+    Return True if a Datapoint exists that answers *question_id* specifically 
+    from the current source_node context.
+    
+    This is used for allowMultiple questions to check if the question has been
+    answered in the current loop iteration/context, allowing the same question
+    to be asked in different contexts (e.g., different AddressHistory instances).
+    """
+
+    if source_node is None:
+        return False
+
     src_id_val = _get_source_node_id(source_node)
     if src_id_val is None:
         return False
@@ -208,17 +292,27 @@ def _question_answered(source_node, question_id: str) -> bool:
         # treat as elementId (string)
         where_clause = "elementId(src) = $srcId"
 
+    # For current context check, only look for DIRECT SUPPLIES relationship
+    # This means we're checking if THIS specific source node has answered the question
     cypher = (
         f"""
         MATCH (src)
         WHERE {where_clause}
-        MATCH (src)-[:SUPPLIES]->(:Datapoint)-[:ANSWERS]->(q {{questionId:$qid}})
-        RETURN q LIMIT 1
+        
+        // Check only direct pattern from current source: (source)-[:SUPPLIES]->(datapoint)-[:ANSWERS]->(question)
+        OPTIONAL MATCH (src)-[:SUPPLIES]->(dp:Datapoint)-[:ANSWERS]->(q {{questionId:$qid}})
+        
+        // Return true if direct pattern found a match from this specific source
+        RETURN CASE 
+            WHEN q IS NOT NULL THEN true 
+            ELSE false 
+        END AS answered
         """
     )
     with neo_client._driver.session() as _session:
         record = _session.run(cypher, srcId=src_id_val, qid=question_id).single()
-    return record is not None
+    
+    return record["answered"] if record else False
 
 
 # ---------------------------------------------------------------------------
@@ -257,10 +351,27 @@ def _execute_action(action_node, ctx: Context, section_id: str) -> Dict[str, Any
     created_ids: List[int] = []
     completed_flag = False
 
+    def _filter_params_for_cypher(params: Dict[str, Any]) -> Dict[str, Any]:
+        """Filter parameters to remove unsupported types for Cypher execution."""
+        safe_params = {}
+        for k, v in params.items():
+            # Skip private keys
+            if k.startswith("__"):
+                continue
+            # Skip Neo4j objects (Node, Relationship, etc.)
+            if hasattr(v, '_graph') or hasattr(v, 'labels') or hasattr(v, 'type'):
+                continue
+            # Skip other unsupported types
+            if isinstance(v, (type, type(None))) and v is not None:
+                continue
+            # Include supported types
+            safe_params[k] = v
+        return safe_params
+
     if action_type == ActionType.CREATE_NODE.value:
         cypher = action_node.get("cypher")  # type: ignore[index]
         if cypher:
-            safe_params = {k: v for k, v in ctx.evaluator_ctx.items() if not k.startswith("__")}
+            safe_params = _filter_params_for_cypher(ctx.evaluator_ctx)
             with neo_client._driver.session() as _session:
                 records = _session.run(cypher, **safe_params).values()
             # Collect any integer IDs returned in first column by convention
@@ -272,7 +383,7 @@ def _execute_action(action_node, ctx: Context, section_id: str) -> Dict[str, Any
     elif action_type == ActionType.COMPLETE_SECTION.value:
         cypher = action_node.get("cypher")  # type: ignore[index]
         if cypher:
-            safe_params = {k: v for k, v in ctx.evaluator_ctx.items() if not k.startswith("__")}
+            safe_params = _filter_params_for_cypher(ctx.evaluator_ctx)
             run_cypher(cypher, safe_params)
         completed_flag = True
 
@@ -377,13 +488,30 @@ def _traverse(current_node, ctx: Context, section_id: str) -> Dict[str, Any]:
         # --------------------------------------------------------------
         if edge_type == EdgeType.PRECEDES.value and target_node.labels.intersection({"Question"}):  # type: ignore[attr-defined]
             question_id = target_node["questionId"]  # type: ignore[index]
+            allow_multiple = target_node.get("allowMultiple", False) # type: ignore[index]
 
-            if _question_answered(ctx.source_node, question_id):
-                logger.debug("Question {} already answered – delve deeper", question_id)
-                # Recurse into this question to follow its outgoing edges
-                return _traverse(target_node, ctx, section_id)
-
-            logger.debug("Stopping traversal – next unanswered question {}", question_id)
+            # Enhanced logic for allowMultiple vs regular questions
+            if allow_multiple:
+                # For allowMultiple questions, we DON'T check if answered in current context
+                # because these are designed for loops where the same question is asked multiple
+                # times against the same container node (e.g., AddressHistory).
+                # Instead, we rely on the edge conditions (askWhen variables) to control when 
+                # the loop should exit.
+                logger.debug("Asking allowMultiple question {} (loop controlled by edge conditions)", question_id)
+            else:
+                # For regular questions, check if answered anywhere (existing logic)
+                is_answered = _question_answered(ctx.source_node, question_id)
+                
+                if is_answered:
+                    logger.debug("Question {} already answered – delve deeper", question_id)
+                    # Recurse into this question to follow its outgoing edges
+                    return _traverse(target_node, ctx, section_id)
+                
+                # If not answered, ask the question
+                logger.debug("Asking regular question {}", question_id)
+            
+            # Ask the question (either allowMultiple or regular not answered)
+            logger.debug("Stopping traversal – next question {}", question_id)
             return EngineResponse(
                 sectionId=section_id,
                 question={"questionId": question_id},

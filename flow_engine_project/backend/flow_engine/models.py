@@ -146,7 +146,7 @@ class EngineResponse(BaseModel):
     sectionId: str
     question: Optional[Any]
     nextSectionId: Optional[str]
-    createdNodeIds: List[int] = []
+    createdNodeIds: List[Union[int, str]] = []
     completed: bool = False
     requestVariables: dict
     sourceNode: Optional[Any]

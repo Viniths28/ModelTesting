@@ -83,7 +83,7 @@ def _normalize_cypher_quotes(cypher_query: str) -> str:
 def cypher_eval(statement: str, ctx: Dict[str, Any], timeout_ms: Optional[int] = None) -> Any:
     """
     Evaluate a Cypher statement dynamically with template substitution.
-    
+
     Enforces a **row cap** of 100 to mitigate data exfiltration risks. If more
     rows are returned a `ValueError` is raised.
     """
